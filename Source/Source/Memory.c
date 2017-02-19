@@ -173,8 +173,17 @@ PMEMORY_BLOCK_HEADER MEM_GetFreeMemoryBlock( PMEMORY_BLOCK p_pMemoryBlock,
 			/* Is there enough space to split the block? */
 			if( FreeTotalSize > FreeOffset )
 			{
-				MEM_CreateMemoryBlockHeader( pNewBlock, true, FreeTotalSize,
-					FreeSize );
+				bool MemoryBlockHeaderCreated = false;
+				MemoryBlockHeaderCreated = MEM_CreateMemoryBlockHeader(
+					pNewBlock, true, FreeTotalSize, FreeSize );
+
+#if defined ( SCREAM_BUILD_DEBUG )
+				if( MemoryBlockHeaderCreated == false )
+				{
+					LOG_Debug( "[MEM_GetFreeMemoryBlock] Failed to cretae a "
+						"memory block for the first half (free)" );
+				}
+#endif /* SCREAM_BUILD_DEBUG */
 
 				/* Verify the magic number is correct */
 				pNewBlock->pNext = NULL;
@@ -186,8 +195,8 @@ PMEMORY_BLOCK_HEADER MEM_GetFreeMemoryBlock( PMEMORY_BLOCK p_pMemoryBlock,
 					{
 						PMEMORY_BLOCK_FOOTER pFooter;
 
-						pFooter = ( MEMORY_BLOCK_FOOTER * )(
-							( ( Uint32 * )pHeader->pNext +
+						pFooter = ( PMEMORY_BLOCK_FOOTER )(
+							( ( Uint8 * )pHeader->pNext +
 								pHeader->pNext->DataOffset ) -
 							sizeof( MEMORY_BLOCK_FOOTER ) );
 
@@ -207,8 +216,16 @@ PMEMORY_BLOCK_HEADER MEM_GetFreeMemoryBlock( PMEMORY_BLOCK p_pMemoryBlock,
 				}
 #endif /* SCREAM_BUILD_DEBUG */
 
-				MEM_CreateMemoryBlockHeader( pHeader, false, TotalSize,
-					p_Size );
+				MemoryBlockHeaderCreated = MEM_CreateMemoryBlockHeader(
+					pHeader, false, TotalSize, p_Size );
+
+#if defined ( SCREAM_BUILD_DEBUG )
+				if( MemoryBlockHeaderCreated == false )
+				{
+					LOG_Debug( "[MEM_GetFreeMemoryBlock] Failed to cretae a "
+						"memory block for the second half (used)" );
+				}
+#endif /* SCREAM_BUILD_DEBUG */
 				pHeader->pNext = pNewBlock;
 			}
 			else
@@ -325,7 +342,7 @@ void *MEM_AllocateFromMemoryBlock( PMEMORY_BLOCK p_pMemoryBlock, size_t p_Size,
 
 		if( strlen( p_pName ) >= ( sizeof( pNewBlock->Name ) - 1 ) )
 		{
-			memcpy( pNewBlock->Name, p_pName, 63 );
+			memcpy( pNewBlock->Name, p_pName, sizeof( pNewBlock->Name ) - 1 );
 		}
 		else
 		{

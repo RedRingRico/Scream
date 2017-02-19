@@ -4,7 +4,7 @@
 #include <sg_xpt.h>
 #include <sg_maloc.h>
 
-#define MEM_SH4_P2NonCahcedMemory( pAddress ) \
+#define MEM_SH4_P2NonCachedMemory( pAddress ) \
 	( ( ( ( long ) pAddress ) & 0x0FFFFFFF ) | 0xA0000000 )
 
 #define MEM_KIB( Amount )( Amount << 10 )
