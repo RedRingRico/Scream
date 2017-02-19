@@ -8,6 +8,7 @@
 #define HW_OK 0
 #define HW_ERROR 1
 #define HW_FATALERROR -1
+#define HW_GDROMERROR -10
 
 #define KM_DITHER TRUE
 #define KM_AAMODE FALSE

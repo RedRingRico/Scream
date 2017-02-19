@@ -1,5 +1,6 @@
 #include <Hardware.h>
 #include <Log.h>
+#include <FileSystem.h>
 
 static KMVOID PALExtCallback( PKMVOID p_pArgs );
 
@@ -51,6 +52,13 @@ Sint32 HW_Initialise( KMBPPMODE p_BPP,
 
 	set_imask( 0 );
 
+	if( FS_Initialise( ) != FS_OK )
+	{
+		LOG_Debug( "[HW_Initialise] <ERROR> GD-ROM initialisation error" );
+
+		return HW_GDROMERROR;
+	}
+
 	if( syCblCheck( ) == SYE_CBL_PAL )
 	{
 		kmSetPALEXTCallback( PALExtCallback, NULL );
@@ -62,6 +70,7 @@ Sint32 HW_Initialise( KMBPPMODE p_BPP,
 
 void HW_Terminate( void )
 {
+	FS_Terminate( );
 	syRtcFinish( );
 	kmUnloadDevice( );
 	syStartGlobalDestructor( );
