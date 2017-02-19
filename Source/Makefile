@@ -57,8 +57,7 @@ OPTIMISE_TYPE = size
 LIBDIR	= $(KATANA_ROOT)\lib
 DEFAULT_INCLUDE	= $(KATANA_ROOT)\include $(KATANA_ROOT)\include\nexgen
 
-DEFAULT_LIBS	= kamui2 shinobi sh4nlfzn dmcast Audio64 modem nt_utl
-
+DEFAULT_LIBS	= shinobi sh4nlfzn dmcast Audio64 modem nt_utl
 
 DEFAULT_OBJS = strt1.obj strt2.obj systemid.obj toc.obj sg_sec.obj \
 	sg_arejp.obj sg_areus.obj sg_areec.obj sg_are00.obj sg_are01.obj \
@@ -114,7 +113,7 @@ development: COPT_LINK = -g
 development: LINK = lnk.exe -noecho
 development: CDEBUG = -debug
 development: TARGET := $(TARGET)_DEV
-development: DEFAULT_LIBS += libcross sh4nlfzn nexgen
+development: DEFAULT_LIBS += kamui2 libcross sh4nlfzn nexgen
 development: OPTIMISE := 0
 development: OPTIMISE_LINK := 0
 development: CDEFS += DEVELOPMENT
@@ -128,7 +127,7 @@ debug: COPT_LINK =
 debug: LINK = lnk.exe -noecho
 debug: CDEBUG = -debug
 debug: TARGET := $(TARGET)_DEBUG
-debug: DEFAULT_LIBS += libcross sh4nlfzn nexgend
+debug: DEFAULT_LIBS += kamui2_d libcross sh4nlfzn nexgend
 debug: OPTIMISE := 0
 debug: OPTIMISE_LINK := 0
 debug: CDEFS += DEBUG NG_DEBUG
@@ -143,7 +142,7 @@ release: COPT_LINK = -g
 release: CDEBUG = -nodebug
 release: EXTENSION = BIN
 release: TARGET := 1ST_READ
-release: DEFAULT_LIBS += nexgen
+release: DEFAULT_LIBS += kamui2 nexgen
 release: OPTIMISE := 1
 release: OPTIMISE_LINK := 1
 release: CDEFS += RELEASE
